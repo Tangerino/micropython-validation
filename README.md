@@ -38,4 +38,11 @@ The repository covers all aspects of the MicroPython ecosystem, including (but n
 
 Contributions are welcome from anyone interested in improving the stability, compatibility, and overall quality of MicroPython.
 
+Validations
+
+| Folder | Subject | Finding |
+| --- | --- | --- |
+| [json-conformance](json-conformance/) | `json` module, all ports | MicroPython accepts 47 of 188 documents that RFC 8259 declares invalid; `{"a": }` parses to `{}`, silently dropping the key |
+
+
 Acho que essa abordagem transmite melhor a ideia de um projeto de longo prazo. Ele deixa claro que o objetivo não é apenas registrar bugs, mas criar uma base de conhecimento de validação para a comunidade MicroPython.

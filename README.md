@@ -43,3 +43,5 @@ Validations
 | Folder | Subject | Finding |
 | --- | --- | --- |
 | [json-conformance](json-conformance/) | `json` module, all ports | MicroPython accepts 47 of 188 documents that RFC 8259 declares invalid; `{"a": }` parses to `{}`, silently dropping the key |
+| [deflate-empty-input](deflate-empty-input/) | `deflate` module, all ports | Compressing empty input emits 0 bytes in RAW, ZLIB and GZIP; the result cannot be read back, not even by MicroPython's own decompressor |
+| [unittest-behaviour](unittest-behaviour/) | `micropython-lib` / `unittest` | `setUp`/`tearDown` run outside the exception handler, so a skip or an error aborts the whole run; `main()` exits 0 on failure |

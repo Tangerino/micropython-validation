@@ -40,6 +40,17 @@ Contributions are welcome from anyone interested in improving the stability, com
 
 Validations
 
+Every folder runs the same way — one command, no flags, nothing to clone by hand:
+
+```sh
+cd <folder>
+./run.sh /path/to/micropython      # or just ./run.sh to use the one on your PATH
+```
+
+Whatever the validation needs — a test corpus, micropython-lib, an interpreter built with a
+non-default option — `run.sh` fetches or builds it on first use and caches it. CPython runs
+alongside as the reference, so the output is a comparison rather than a bare score.
+
 | Folder | Subject | Finding |
 | --- | --- | --- |
 | [json-conformance](json-conformance/) | `json` module, all ports | MicroPython accepts 47 of 188 documents that RFC 8259 declares invalid; `{"a": }` parses to `{}`, silently dropping the key |

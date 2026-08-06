@@ -115,6 +115,17 @@ Also reproduced on an ESP32-P4 (Waveshare ESP32-P4-NANO) with the same micropyth
 ## Running
 
 ```sh
+./run.sh /path/to/micropython
+```
+
+That is the whole thing. micropython-lib is downloaded on first use and cached, so there is
+nothing to clone by hand. With no argument it looks for `micropython` on your `PATH`.
+Already have micropython-lib? `export MICROPY_LIB=/path/to/micropython-lib`.
+
+<details>
+<summary>Running the pieces directly</summary>
+
+```sh
 python3 probe.py python3                                        # CPython reference
 python3 probe.py /path/to/micropython /path/to/micropython-lib/python-stdlib/unittest
 ```
@@ -123,9 +134,10 @@ Or through pytest, which compares them:
 
 ```sh
 pip install pytest
-pytest --interpreter /path/to/micropython \
-       --unittest-path /path/to/micropython-lib/python-stdlib/unittest
+pytest --interpreter /path/to/micropython --unittest-path /path/to/micropython-lib/python-stdlib/unittest
 ```
+
+</details>
 
 **The tests fail while the bugs are present** — seven of them today. That is deliberate:
 this folder is a verification tool, so applying a fix and watching the suite turn green is
@@ -136,6 +148,7 @@ invention of this suite.
 
 | File | Role |
 |---|---|
+| `run.sh` | one-command entry point: fetches micropython-lib, runs everything |
 | `cases/` | four self-contained reproduction scripts, each demonstrating one behaviour |
 | `probe.py` | runs each case under one interpreter; reports exit code, tests run, and outcome |
 | `conftest.py` | pytest options and fixtures |

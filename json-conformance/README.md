@@ -62,21 +62,38 @@ legitimate rejection rather than a fault.
 ## Reproducing
 
 ```sh
-git clone --depth 1 https://github.com/nst/JSONTestSuite.git /tmp/jts
-python3 report.py --suite /tmp/jts/test_parsing --interpreter micropython=/path/to/micropython
+./run.sh /path/to/micropython
 ```
 
-`report.py` is standalone — Python 3 and nothing else. It prints the Markdown you see in
-[RESULTS.md](RESULTS.md).
+That is the whole thing. The corpus is downloaded on first use and cached, so there is
+nothing to clone by hand and no paths to line up. With no argument it looks for
+`micropython` on your `PATH`. Already have JSONTestSuite somewhere? `export
+JSON_TEST_SUITE=/path/to/JSONTestSuite` and it will use that instead of downloading again.
+
+It prints the Markdown you see in [RESULTS.md](RESULTS.md).
+
+<details>
+<summary>Running the pieces directly</summary>
+
+`report.py` is standalone — Python 3 and nothing else:
+
+```sh
+python3 report.py --suite /path/to/JSONTestSuite/test_parsing --interpreter micropython=/path/to/micropython
+```
 
 For the pytest harness:
 
 ```sh
 pip install pytest
-pytest --suite /tmp/jts/test_parsing --interpreter micropython=/path/to/micropython
+pytest --suite /path/to/JSONTestSuite/test_parsing --interpreter micropython=/path/to/micropython
 ```
 
-`--interpreter` is repeatable, so several builds or versions can be compared in one run.
+Note the `name=path` form of `--interpreter`, and that `--suite` wants the `test_parsing`
+subdirectory rather than the repository root. `--interpreter` is repeatable, so several
+builds or versions can be compared in one run.
+
+</details>
+
 CPython is always included as the reference: the useful question is not how many cases a
 parser fails in the abstract, but how it differs from the implementation everyone writing
 JSON already works against.
@@ -85,6 +102,7 @@ JSON already works against.
 
 | File | Role |
 |---|---|
+| `run.sh` | one-command entry point: fetches the corpus, runs the report |
 | `probe.py` | walks the corpus and reports accept/reject per case. **Runs under CPython and MicroPython alike** — the comparison is only meaningful if both parsers get identical bytes from identical code |
 | `conftest.py` | pytest options and fixtures; one process per interpreter, not per case |
 | `test_conformance.py` | the assertions, split by what each case name promises |
@@ -92,7 +110,7 @@ JSON already works against.
 | `baseline.json` | the results above, recorded so CI fails only on *new* deviations |
 | `RESULTS.md` | generated report for the environment listed above |
 
-The corpus is not vendored here. It is MIT-licensed and lives upstream; clone it as shown.
+The corpus is not vendored here. It is MIT-licensed and lives upstream; `run.sh` fetches it.
 
 ## Using it in CI
 

@@ -12,7 +12,9 @@ import probe  # noqa: E402
 # The files under cases/ are reproduction scripts, not tests: they call
 # unittest.main() at import time, and one of them is deliberately named
 # *_test.py. Collecting them would run them inside pytest's own process.
-collect_ignore_glob = ['cases/*']
+# The clone that run.sh caches here is a whole library full of files named
+# test_*.py; without this, pytest collects those instead of this folder.
+collect_ignore_glob = ['cases/*', '.micropython-lib/*']
 
 
 def pytest_addoption(parser):

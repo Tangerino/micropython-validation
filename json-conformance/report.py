@@ -2,6 +2,9 @@
 
 Standalone: no pytest, no dependencies. Run it, paste the output into an issue.
 
+Normally you want ``./run.sh /path/to/micropython``, which fetches the corpus and
+calls this. Directly:
+
     python3 report.py --suite /path/to/JSONTestSuite/test_parsing \\
                       --interpreter micropython=/path/to/micropython
 
@@ -214,12 +217,14 @@ def main():
             add('- `{}`'.format(case.replace('.json', '')))
         add('')
 
+    # This footer travels with RESULTS.md wherever it is pasted, so it has to
+    # name the repository rather than assume the reader is standing in it.
     add('## Reproducing')
     add('')
     add('```sh')
-    add('git clone --depth 1 https://github.com/nst/JSONTestSuite.git')
-    add('python3 report.py --suite JSONTestSuite/test_parsing \\')
-    add('                  --interpreter micropython=/path/to/micropython')
+    add('git clone https://github.com/Tangerino/micropython-validation.git')
+    add('cd micropython-validation/json-conformance')
+    add('./run.sh /path/to/micropython')
     add('```')
     add('')
 

@@ -83,8 +83,8 @@ For completeness: `cpython` also accepts 3 documents the corpus marks invalid. T
 ## Reproducing
 
 ```sh
-git clone --depth 1 https://github.com/nst/JSONTestSuite.git
-python3 report.py --suite JSONTestSuite/test_parsing \
-                  --interpreter micropython=/path/to/micropython
+git clone https://github.com/Tangerino/micropython-validation.git
+cd micropython-validation/json-conformance
+./run.sh /path/to/micropython
 ```
 

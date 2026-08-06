@@ -36,15 +36,15 @@ if [ -n "${JSON_TEST_SUITE:-}" ]; then
         exit 1
     fi
 elif [ ! -d "$CORPUS/test_parsing" ]; then
-    echo ">> downloading the test corpus (once)"
+    echo ">> downloading the test corpus (once)" >&2
     rm -rf "$CORPUS"
     git clone --depth 1 --quiet https://github.com/nst/JSONTestSuite.git "$CORPUS"
 fi
 
-echo ">> interpreter: $MICROPYTHON"
-echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')"
-echo ">> corpus:      $CORPUS/test_parsing"
-echo
+echo ">> interpreter: $MICROPYTHON" >&2
+echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')" >&2
+echo ">> corpus:      $CORPUS/test_parsing" >&2
+echo >&2
 
 exec python3 "$HERE/report.py" \
     --suite "$CORPUS/test_parsing" \

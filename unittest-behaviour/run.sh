@@ -35,27 +35,27 @@ if [ ! -d "$UNITTEST" ]; then
         echo "error: MICROPY_LIB=$LIB has no python-stdlib/unittest directory." >&2
         exit 1
     fi
-    echo ">> downloading micropython-lib (once)"
+    echo ">> downloading micropython-lib (once)" >&2
     rm -rf "$LIB"
     git clone --depth 1 --quiet https://github.com/micropython/micropython-lib.git "$LIB"
 fi
 
-echo ">> interpreter: $MICROPYTHON"
-echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')"
-echo ">> unittest:    $UNITTEST"
-echo
+echo ">> interpreter: $MICROPYTHON" >&2
+echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')" >&2
+echo ">> unittest:    $UNITTEST" >&2
+echo >&2
 
 echo "== MicroPython =="
 python3 "$HERE/probe.py" "$MICROPYTHON" "$UNITTEST"
-echo
+echo >&2
 echo "== CPython (the reference) =="
 python3 "$HERE/probe.py" python3
-echo
+echo >&2
 
 if python3 -c 'import pytest' 2>/dev/null; then
     echo "== comparison =="
     echo "   (tests fail while the bugs are present -- that is the point)"
-    echo
+    echo >&2
     exec python3 -m pytest "$HERE/test_unittest_behaviour.py" \
         --interpreter "$MICROPYTHON" \
         --unittest-path "$UNITTEST"

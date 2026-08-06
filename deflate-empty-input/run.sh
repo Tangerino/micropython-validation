@@ -34,7 +34,7 @@ has_compress() {
 }
 
 if ! has_compress "$MICROPYTHON"; then
-    echo ">> $MICROPYTHON was built without deflate compression."
+    echo ">> $MICROPYTHON was built without deflate compression." >&2
 
     # ports/unix/<build>/micropython -> the repository root, if that is the shape.
     ROOT="$(cd "$(dirname "$MICROPYTHON")/../../.." 2>/dev/null && pwd || true)"
@@ -47,33 +47,33 @@ if ! has_compress "$MICROPYTHON"; then
 
     BUILT="$ROOT/ports/unix/build-compress/micropython"
     if [ ! -x "$BUILT" ]; then
-        echo ">> building one at $BUILT"
-        echo
+        echo ">> building one at $BUILT" >&2
+        echo >&2
         make -C "$ROOT/ports/unix" submodules >/dev/null
         make -C "$ROOT/ports/unix" BUILD=build-compress \
             CFLAGS_EXTRA=-DMICROPY_PY_DEFLATE_COMPRESS=1 \
             -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)" >/dev/null
-        echo
+        echo >&2
     fi
     MICROPYTHON="$BUILT"
     has_compress "$MICROPYTHON" || { echo "error: the build still has no compression." >&2; exit 1; }
 fi
 
-echo ">> interpreter: $MICROPYTHON"
-echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')"
-echo
+echo ">> interpreter: $MICROPYTHON" >&2
+echo ">> $("$MICROPYTHON" -c 'import sys; print(sys.version)' 2>/dev/null || echo 'version unknown')" >&2
+echo >&2
 
 echo "== what MicroPython produces =="
 "$MICROPYTHON" "$HERE/probe.py"
-echo
+echo >&2
 echo "== what CPython produces (the reference) =="
 python3 "$HERE/probe.py"
-echo
+echo >&2
 
 if python3 -c 'import pytest' 2>/dev/null; then
     echo "== comparison =="
     echo "   (tests fail while the bug is present -- that is the point)"
-    echo
+    echo >&2
     exec python3 -m pytest "$HERE/test_deflate_empty.py" --interpreter "$MICROPYTHON"
 else
     echo "install pytest for the side-by-side comparison:  pip install pytest"

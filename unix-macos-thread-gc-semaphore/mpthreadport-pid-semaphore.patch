@@ -1,0 +1,33 @@
+diff --git a/ports/unix/mpthreadport.c b/ports/unix/mpthreadport.c
+index a41b3ec9f..70799760a 100644
+--- a/ports/unix/mpthreadport.c
++++ b/ports/unix/mpthreadport.c
+@@ -39,6 +39,7 @@
+ #include <signal.h>
+ #include <sched.h>
+ #include <semaphore.h>
++#include <unistd.h>
+ 
+ #include "shared/runtime/gchelper.h"
+ 
+@@ -142,8 +143,19 @@ void mp_thread_init(void) {
+     thread->next = NULL;
+ 
+     #if defined(__APPLE__)
+-    snprintf(thread_signal_done_name, sizeof(thread_signal_done_name), "micropython_sem_%ld", (long)thread->id);
++    // The semaphore name must be unique per process: pthread_self() of the main
++    // thread is the same value in every process of the same binary, so using it
++    // makes concurrent MicroPython processes collide on the name (and with O_EXCL
++    // all but the first get SEM_FAILED, so GC no longer waits for other threads
++    // to finish scanning their stacks).  Use the PID instead, and remove any
++    // stale semaphore left behind by a crashed process that had the same PID.
++    snprintf(thread_signal_done_name, sizeof(thread_signal_done_name), "micropython_sem_%d", (int)getpid());
++    sem_unlink(thread_signal_done_name);
+     thread_signal_done_p = sem_open(thread_signal_done_name, O_CREAT | O_EXCL, 0666, 0);
++    if (thread_signal_done_p == SEM_FAILED) {
++        perror("sem_open");
++        abort();
++    }
+     #else
+     sem_init(&thread_signal_done, 0, 0);
+     #endif

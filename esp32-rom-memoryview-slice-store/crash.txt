@@ -1,0 +1,45 @@
+
+A fatal error occurred. The crash dump printed below may be used to help
+determine what caused it. If you are not already running the most recent
+version of MicroPython, consider upgrading. New versions often fix bugs.
+
+To learn more about how to debug and/or report this crash visit the wiki
+page at: https://github.com/micropython/micropython/wiki/ESP32-debugging
+
+MPY version : v1.29.0 on 2026-08-25
+IDF version : v5.5.2
+Machine     : coIoTe with ESP32
+
+Guru Meditation Error: Core  1 panic'ed (LoadStoreError). Exception was unhandled.
+
+Core  1 register dump:
+PC      : 0x400f9887  PS      : 0x00060230  A0      : 0x800f9470  A1      : 0x3ffd7220  
+A2      : 0x00000001  A3      : 0x00000000  A4      : 0x00000000  A5      : 0x500007f8  
+A6      : 0x3f417440  A7      : 0x3f4270bc  A8      : 0x000000c2  A9      : 0x00000000  
+A10     : 0x50000ff8  A11     : 0x00000000  A12     : 0x00000000  A13     : 0x50000ff8  
+A14     : 0x00000006  A15     : 0x00000000  SAR     : 0x00000002  EXCCAUSE: 0x00000003  
+EXCVADDR: 0x3f4270c0  LBEG    : 0x400928c6  LEND    : 0x400928d1  LCOUNT  : 0x00000000  
+
+
+Backtrace: 0x400f9884:0x3ffd7220 0x400f946d:0x3ffd7270 0x401035b9:0x3ffd7290 0x40085d09:0x3ffd72c0 0x400fb4dc:0x3ffd7370 0x40101aed:0x3ffd73e0 0x40101b06:0x3ffd7400 0x40111b3a:0x3ffd7420 0x40111d0d:0x3ffd74b0 0x400f4c42:0x3ffd7500
+
+
+
+
+ELF file SHA256: 4b6281d28
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0xc (SW_CPU_RESET),boot:0x1b (SPI_FAST_FLASH_BOOT)
+configsip: 271414342, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:4200
+load:0x40078000,len:15236
+load:0x40080400,len:3344
+entry 0x400805a8
+MicroPython v1.29.0 on 2026-08-25; coIoTe with ESP32
+Type "help()" for more information.
+>>> timeout waiting for first EOF reception
+CRASH

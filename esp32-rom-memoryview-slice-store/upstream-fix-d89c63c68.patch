@@ -1,0 +1,42 @@
+From d89c63c6847cd96d43ae77fe4a770ea01634d97a Mon Sep 17 00:00:00 2001
+From: Alessandro Gatti <a.gatti@frob.it>
+Date: Thu, 27 Aug 2026 08:52:24 +0200
+Subject: [PATCH] py/objarray: Update slice data only if necessary.
+
+This commit skips modifications to array slices length information if
+there is no change in the slice size.
+
+For simplicity reasons both the slice size and the slice free items
+count were always updated on every memory access.  This could be a
+problem if the slice object is pre-built and located in ROM, as some
+microcontrollers may trigger a bus error or other exceptions in that
+case.
+
+These changes make the update conditional, occurring only if the slice
+size has been changed.
+
+Signed-off-by: Alessandro Gatti <a.gatti@frob.it>
+---
+ py/objarray.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/py/objarray.c b/py/objarray.c
+index 75bc671c1..609d95568 100644
+--- a/py/objarray.c
++++ b/py/objarray.c
+@@ -537,8 +537,10 @@ static mp_obj_t array_subscr(mp_obj_t self_in, mp_obj_t index_in, mp_obj_t value
+                     mp_seq_clear(dest_items, o->len + len_adj, o->len, item_sz);
+                     // TODO: alloc policy after shrinking
+                 }
+-                o->free -= len_adj;
+-                o->len += len_adj;
++                if (len_adj != 0) {
++                    o->free -= len_adj;
++                    o->len += len_adj;
++                }
+                 return mp_const_none;
+                 #else
+                 return MP_OBJ_NULL; // op not supported
+-- 
+2.49.0
+
